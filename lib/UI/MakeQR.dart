@@ -228,7 +228,7 @@ class _MakeQRState extends State<MakeQR> {
       ByteData byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
       var pngBytes = byteData.buffer.asUint8List();
-      String dtx = DateTime.now().millisecondsSinceEpoch.toString();;
+      String dtx = DateTime.now().millisecondsSinceEpoch.toString();
       new Directory('/sdcard/DCIM/QR Toolkit/').create();
       final file2 =
           await new File('/sdcard/DCIM/QR Toolkit/QR Toolkit Temp.png').create();
