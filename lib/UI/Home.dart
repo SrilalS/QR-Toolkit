@@ -152,7 +152,7 @@ class _HomeState extends State<Home> {
   void _onQRViewCreated(QRViewController controller) {
     this.qrViewController = controller;
     controller.scannedDataStream.listen((scanData) async {
-      await controller.pauseCamera();
+      controller.pauseCamera();
       showResult(scanData.toString());
       //setState(() {
       //  qrText = scanData;

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -6,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:wc_flutter_share/wc_flutter_share.dart';
 
 class MakeQR extends StatefulWidget {
   @override
@@ -16,7 +15,7 @@ class MakeQR extends StatefulWidget {
 
 class _MakeQRState extends State<MakeQR> {
   GlobalKey _globalKey = new GlobalKey();
-  String groupVal = '1';
+  String groupVal = 'Free Text';
   String qrData = '';
   TextEditingController qrText = TextEditingController();
 
@@ -24,7 +23,6 @@ class _MakeQRState extends State<MakeQR> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: NeumorphicAppBar(
         title: Row(
@@ -41,7 +39,7 @@ class _MakeQRState extends State<MakeQR> {
                       topLeft: Radius.circular(32.0))),
                 ),
                 groupValue: groupVal,
-                value: '1',
+                value: 'Free Text',
                 child: Center(child: Text('Free Text')),
                 onChanged: (value) {
                   setState(() {
@@ -59,7 +57,7 @@ class _MakeQRState extends State<MakeQR> {
                     shape: NeumorphicShape.flat,
                     boxShape: NeumorphicBoxShape.rect()),
                 groupValue: groupVal,
-                value: '2',
+                value: 'URL',
                 child: Center(child: Text('URL')),
                 onChanged: (value) {
                   setState(() {
@@ -80,7 +78,7 @@ class _MakeQRState extends State<MakeQR> {
                       topRight: Radius.circular(32.0))),
                 ),
                 groupValue: groupVal,
-                value: '3',
+                value: 'Phone',
                 child: Center(child: Text('Phone')),
                 onChanged: (value) {
                   setState(() {
@@ -110,6 +108,11 @@ class _MakeQRState extends State<MakeQR> {
                   style:
                       NeumorphicStyle(shape: NeumorphicShape.flat, depth: -5),
                   child: TextField(
+                    onSubmitted: (value) {
+                      setState(() {
+                        qrData = value;
+                      });
+                    },
                     onChanged: (value) {
                       setState(() {
                         qrData = value;
@@ -119,6 +122,7 @@ class _MakeQRState extends State<MakeQR> {
                     keyboardType: TextInputType.multiline,
                     style: TextStyle(fontSize: 24),
                     decoration: InputDecoration(
+                      labelText: groupVal,
                       focusedBorder: InputBorder.none,
                       enabledBorder: InputBorder.none,
                     ),
@@ -126,13 +130,16 @@ class _MakeQRState extends State<MakeQR> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.only(left: 16, right: 16),
                 child: Neumorphic(
                     style: NeumorphicStyle(depth: -5),
                     child: RepaintBoundary(
                       key: _globalKey,
-                      child: QrImage(
-                        data: qrData,
+                      child: Container(
+                        color: Colors.white,
+                        child: QrImage(
+                          data: qrData,
+                        ),
                       ),
                     )),
               ),
@@ -148,7 +155,9 @@ class _MakeQRState extends State<MakeQR> {
                     ),
                   ),
                   NeumorphicButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      shareimage();
+                    },
                     child: Row(
                       children: <Widget>[Icon(Icons.share), Text('Share')],
                     ),
@@ -165,41 +174,70 @@ class _MakeQRState extends State<MakeQR> {
     );
   }
 
-  Future<Uint8List> capturePng() async {
+  void capturePng() async {
     try {
-      print('inside');
       RenderRepaintBoundary boundary =
           _globalKey.currentContext.findRenderObject();
       ui.Image image = await boundary.toImage(pixelRatio: 5.0);
       ByteData byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
       var pngBytes = byteData.buffer.asUint8List();
-      var bs64 = base64Encode(pngBytes);
-      //print(pngBytes);
-      //print(bs64);
-      print(image.height);
-      setState(() {});
-
-      final tempDir = await getTemporaryDirectory();
-      //print(tempDir.path);
 
       String dtx = DateTime.now().millisecondsSinceEpoch.toString();
       //final file = await new File('${tempDir.path}/QR Tools $dtx.png').create();
       //await file.writeAsBytes(pngBytes);
-
-
-      var pathtodcim = await getExternalStorageDirectories();
-      print(pathtodcim);
       new Directory('/sdcard/DCIM/QR Toolkit/').create();
-      final file2 = await new File('/sdcard/DCIM/QR Toolkit/QR Tools $dtx.png').create();
+      final file2 =
+          await new File('/sdcard/DCIM/QR Toolkit/QR Toolkit $dtx.png').create();
       await file2.writeAsBytes(pngBytes);
+      savedshow();
+    } catch (e) {}
+  }
 
-      //final channel = const MethodChannel('channel:me.alfian.share/share');
-      //channel.invokeMethod('shareFile', 'image.png');
+  void savedshow() {
+    //show dialog with share options here
+    showDialog(
+      context: context,
+      child: AlertDialog(
+        title: Text('Saved!'),
+        actions: <Widget>[
+            NeumorphicButton(
+              provideHapticFeedback: false,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              style: NeumorphicStyle(
+                shape: NeumorphicShape.flat,
+                boxShape: NeumorphicBoxShape.circle(),
+              ),
+              padding: const EdgeInsets.all(12.0),
+              child: Icon(
+                Icons.done,
+              ),
+            ),
+          ],
+      ),
+    );
+  }
 
-      return pngBytes;
-    } catch (e) {
-      print(e);
-    }
+  void shareimage() async {
+    try {
+      RenderRepaintBoundary boundary =
+          _globalKey.currentContext.findRenderObject();
+      ui.Image image = await boundary.toImage(pixelRatio: 5.0);
+      ByteData byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      var pngBytes = byteData.buffer.asUint8List();
+      String dtx = DateTime.now().millisecondsSinceEpoch.toString();;
+      new Directory('/sdcard/DCIM/QR Toolkit/').create();
+      final file2 =
+          await new File('/sdcard/DCIM/QR Toolkit/QR Toolkit Temp.png').create();
+      await file2.writeAsBytes(pngBytes);
+      await WcFlutterShare.share(
+          sharePopupTitle: 'QR Toolkit : Share QR',
+          fileName: 'QR Toolkit $dtx.png',
+          mimeType: 'image/png',
+          bytesOfFile: pngBytes);
+    } catch (e) {}
   }
 }
