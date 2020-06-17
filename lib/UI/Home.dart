@@ -4,6 +4,7 @@ import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qrtools/Styles/Theme.dart';
+import 'package:qrtools/UI/MakeQR.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Home extends StatefulWidget {
@@ -128,7 +129,8 @@ class _HomeState extends State<Home> {
                 duration: Duration(milliseconds: 500),
                 provideHapticFeedback: false,
                 onPressed: () {
-                  showResult('qrResult');
+                  //showResult('qrResult');
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> MakeQR()));
                 },
                 style: NeumorphicStyle(
                   shape: NeumorphicShape.flat,
@@ -165,6 +167,8 @@ class _HomeState extends State<Home> {
   }
 
   void showResult(String qrResult) {
+
+
     showDialog(
         context: context,
         child: AlertDialog(
@@ -185,6 +189,19 @@ class _HomeState extends State<Home> {
               ),
             ),
             NeumorphicButton(
+              duration: Duration(milliseconds: 250),
+              provideHapticFeedback: true,
+              onPressed: () {},
+              style: NeumorphicStyle(
+                shape: NeumorphicShape.flat,
+                boxShape: NeumorphicBoxShape.circle(),
+              ),
+              padding: const EdgeInsets.all(12.0),
+              child: Icon(
+                Icons.edit,
+              ),
+            ),
+            NeumorphicButton(
               provideHapticFeedback: false,
               onPressed: () {
                 Navigator.pop(context);
@@ -199,7 +216,7 @@ class _HomeState extends State<Home> {
               ),
             ),
           ],
-          title: Text('QR Result'),
+          title: Text('QR Result (Hold to Select)'),
           content: Padding(
             padding: const EdgeInsets.all(16.0),
             child: SingleChildScrollView(
