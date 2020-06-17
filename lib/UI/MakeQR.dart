@@ -107,24 +107,27 @@ class _MakeQRState extends State<MakeQR> {
                 child: Neumorphic(
                   style:
                       NeumorphicStyle(shape: NeumorphicShape.flat, depth: -5),
-                  child: TextField(
-                    onSubmitted: (value) {
-                      setState(() {
-                        qrData = value;
-                      });
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        qrData = value;
-                      });
-                    },
-                    maxLines: null,
-                    keyboardType: TextInputType.multiline,
-                    style: TextStyle(fontSize: 24),
-                    decoration: InputDecoration(
-                      labelText: groupVal,
-                      focusedBorder: InputBorder.none,
-                      enabledBorder: InputBorder.none,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      onSubmitted: (value) {
+                        setState(() {
+                          qrData = value;
+                        });
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          qrData = value;
+                        });
+                      },
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
+                      style: TextStyle(fontSize: 24),
+                      decoration: InputDecoration(
+                        labelText: groupVal,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                      ),
                     ),
                   ),
                 ),

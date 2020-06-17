@@ -13,7 +13,7 @@ class QRTools extends StatelessWidget {
 
     return NeumorphicApp(
       debugShowCheckedModeBanner: false,
-      title: 'QR Tools',
+      title: 'QR Toolkit',
       theme: NeumorphicThemeData(
         baseColor: Color(0xFFFFFFFF),
         lightSource: LightSource.topLeft,
