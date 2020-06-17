@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:wc_flutter_share/wc_flutter_share.dart';
 
@@ -179,6 +180,8 @@ class _MakeQRState extends State<MakeQR> {
 
   void capturePng() async {
     try {
+      var status = await Permission.camera.status;
+      await Permission.storage.request().isGranted;
       RenderRepaintBoundary boundary =
           _globalKey.currentContext.findRenderObject();
       ui.Image image = await boundary.toImage(pixelRatio: 5.0);
@@ -189,6 +192,8 @@ class _MakeQRState extends State<MakeQR> {
       String dtx = DateTime.now().millisecondsSinceEpoch.toString();
       //final file = await new File('${tempDir.path}/QR Tools $dtx.png').create();
       //await file.writeAsBytes(pngBytes);
+      
+
       new Directory('/sdcard/DCIM/QR Toolkit/').create();
       final file2 =
           await new File('/sdcard/DCIM/QR Toolkit/QR Toolkit $dtx.png').create();
@@ -224,7 +229,10 @@ class _MakeQRState extends State<MakeQR> {
   }
 
   void shareimage() async {
+    
     try {
+      var status = await Permission.camera.status;
+      await Permission.storage.request().isGranted;
       RenderRepaintBoundary boundary =
           _globalKey.currentContext.findRenderObject();
       ui.Image image = await boundary.toImage(pixelRatio: 5.0);

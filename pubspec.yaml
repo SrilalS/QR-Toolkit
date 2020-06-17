@@ -18,6 +18,7 @@ dependencies:
   qr_flutter: ^3.2.0
   path_provider: ^1.6.10
   wc_flutter_share: ^0.2.2
+  permission_handler: ^5.0.1
 
 dev_dependencies:
   flutter_test:
