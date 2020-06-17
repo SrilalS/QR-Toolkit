@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class MakeQR extends StatefulWidget {
@@ -176,6 +179,24 @@ class _MakeQRState extends State<MakeQR> {
       //print(bs64);
       print(image.height);
       setState(() {});
+
+      final tempDir = await getTemporaryDirectory();
+      //print(tempDir.path);
+
+      String dtx = DateTime.now().millisecondsSinceEpoch.toString();
+      //final file = await new File('${tempDir.path}/QR Tools $dtx.png').create();
+      //await file.writeAsBytes(pngBytes);
+
+
+      var pathtodcim = await getExternalStorageDirectories();
+      print(pathtodcim);
+      new Directory('/sdcard/DCIM/QR Toolkit/').create();
+      final file2 = await new File('/sdcard/DCIM/QR Toolkit/QR Tools $dtx.png').create();
+      await file2.writeAsBytes(pngBytes);
+
+      //final channel = const MethodChannel('channel:me.alfian.share/share');
+      //channel.invokeMethod('shareFile', 'image.png');
+
       return pngBytes;
     } catch (e) {
       print(e);
