@@ -1,3 +1,4 @@
+import 'package:clipboard_manager/clipboard_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
@@ -178,7 +179,9 @@ class _HomeState extends State<Home> {
             NeumorphicButton(
               duration: Duration(milliseconds: 250),
               provideHapticFeedback: true,
-              onPressed: () {},
+              onPressed: () {
+                ClipboardManager.copyToClipBoard(qrResult);
+              },
               style: NeumorphicStyle(
                 shape: NeumorphicShape.flat,
                 boxShape: NeumorphicBoxShape.circle(),
@@ -186,19 +189,6 @@ class _HomeState extends State<Home> {
               padding: const EdgeInsets.all(12.0),
               child: Icon(
                 Icons.content_copy,
-              ),
-            ),
-            NeumorphicButton(
-              duration: Duration(milliseconds: 250),
-              provideHapticFeedback: true,
-              onPressed: () {},
-              style: NeumorphicStyle(
-                shape: NeumorphicShape.flat,
-                boxShape: NeumorphicBoxShape.circle(),
-              ),
-              padding: const EdgeInsets.all(12.0),
-              child: Icon(
-                Icons.edit,
               ),
             ),
             NeumorphicButton(

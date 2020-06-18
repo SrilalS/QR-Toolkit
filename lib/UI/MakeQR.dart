@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -16,6 +17,7 @@ class MakeQR extends StatefulWidget {
 
 class _MakeQRState extends State<MakeQR> {
   GlobalKey _globalKey = new GlobalKey();
+  GlobalKey scaffkey = new GlobalKey();
   String groupVal = 'Free Text';
   String qrData = '';
   TextEditingController qrText = TextEditingController();
@@ -25,6 +27,7 @@ class _MakeQRState extends State<MakeQR> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffkey,
       appBar: NeumorphicAppBar(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -178,58 +181,35 @@ class _MakeQRState extends State<MakeQR> {
     );
   }
 
-  void capturePng() async {
+  Future capturePng() async {
     try {
-      var status = await Permission.camera.status;
-      await Permission.storage.request().isGranted;
-      RenderRepaintBoundary boundary =
-          _globalKey.currentContext.findRenderObject();
-      ui.Image image = await boundary.toImage(pixelRatio: 5.0);
-      ByteData byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
-      var pngBytes = byteData.buffer.asUint8List();
+      await Permission.storage.request().then((value) async {
+        RenderRepaintBoundary boundary =
+            _globalKey.currentContext.findRenderObject();
+        ui.Image image = await boundary.toImage(pixelRatio: 5.0);
+        ByteData byteData =
+            await image.toByteData(format: ui.ImageByteFormat.png);
+        var pngBytes = byteData.buffer.asUint8List();
 
-      String dtx = DateTime.now().millisecondsSinceEpoch.toString();
-      //final file = await new File('${tempDir.path}/QR Tools $dtx.png').create();
-      //await file.writeAsBytes(pngBytes);
-      
+        String dtx = DateTime.now().millisecondsSinceEpoch.toString();
+        //final file = await new File('${tempDir.path}/QR Tools $dtx.png').create();
+        //await file.writeAsBytes(pngBytes);
 
-      new Directory('/sdcard/DCIM/QR Toolkit/').create();
-      final file2 =
-          await new File('/sdcard/DCIM/QR Toolkit/QR Toolkit $dtx.png').create();
-      await file2.writeAsBytes(pngBytes);
-      savedshow();
+        new Directory('/sdcard/DCIM/QR Toolkit/').create();
+        final file2 =
+            await new File('/sdcard/DCIM/QR Toolkit/QR Toolkit $dtx.png')
+                .create();
+        await file2.writeAsBytes(pngBytes);
+        Flushbar(
+            message: 'Saved!',
+            duration: Duration(
+              seconds: 1,
+            )).show(context);
+      });
     } catch (e) {}
   }
 
-  void savedshow() {
-    //show dialog with share options here
-    showDialog(
-      context: context,
-      child: AlertDialog(
-        title: Text('Saved!'),
-        actions: <Widget>[
-            NeumorphicButton(
-              provideHapticFeedback: false,
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              style: NeumorphicStyle(
-                shape: NeumorphicShape.flat,
-                boxShape: NeumorphicBoxShape.circle(),
-              ),
-              padding: const EdgeInsets.all(12.0),
-              child: Icon(
-                Icons.done,
-              ),
-            ),
-          ],
-      ),
-    );
-  }
-
   void shareimage() async {
-    
     try {
       var status = await Permission.camera.status;
       await Permission.storage.request().isGranted;
@@ -242,7 +222,8 @@ class _MakeQRState extends State<MakeQR> {
       String dtx = DateTime.now().millisecondsSinceEpoch.toString();
       new Directory('/sdcard/DCIM/QR Toolkit/').create();
       final file2 =
-          await new File('/sdcard/DCIM/QR Toolkit/QR Toolkit Temp.png').create();
+          await new File('/sdcard/DCIM/QR Toolkit/QR Toolkit Temp.png')
+              .create();
       await file2.writeAsBytes(pngBytes);
       await WcFlutterShare.share(
           sharePopupTitle: 'QR Toolkit : Share QR',

@@ -19,6 +19,8 @@ dependencies:
   path_provider: ^1.6.10
   wc_flutter_share: ^0.2.2
   permission_handler: ^5.0.1
+  flushbar: ^1.10.4
+  clipboard_manager: ^0.0.4
 
 dev_dependencies:
   flutter_test:
