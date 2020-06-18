@@ -26,6 +26,11 @@ class _MakeQRState extends State<MakeQR> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.grey.shade100,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: Colors.grey.shade100,
+        systemNavigationBarIconBrightness: Brightness.dark));
     return Scaffold(
       key: scaffkey,
       appBar: NeumorphicAppBar(
@@ -211,8 +216,7 @@ class _MakeQRState extends State<MakeQR> {
 
   void shareimage() async {
     try {
-      var status = await Permission.camera.status;
-      await Permission.storage.request().isGranted;
+      await Permission.storage.request();
       RenderRepaintBoundary boundary =
           _globalKey.currentContext.findRenderObject();
       ui.Image image = await boundary.toImage(pixelRatio: 5.0);

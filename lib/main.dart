@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-
-import 'UI/Home.dart';
+import 'package:qrtools/WelcomeScreen.dart';
 
 void main() {
   runApp(QRTools());
@@ -24,7 +23,7 @@ class QRTools extends StatelessWidget {
         lightSource: LightSource.topLeft,
         depth: 10,
       ),
-      home: Home(),
+      home: Welcome(),
     );
   }
 }
