@@ -131,7 +131,8 @@ class _HomeState extends State<Home> {
                 provideHapticFeedback: false,
                 onPressed: () {
                   //showResult('qrResult');
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> MakeQR()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => MakeQR()));
                 },
                 style: NeumorphicStyle(
                   shape: NeumorphicShape.flat,
@@ -168,61 +169,60 @@ class _HomeState extends State<Home> {
   }
 
   void showResult(String qrResult) {
-
-
     showDialog(
-        context: context,
-        child: AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(16.0))),
-          actions: <Widget>[
-            NeumorphicButton(
-              duration: Duration(milliseconds: 250),
-              provideHapticFeedback: true,
-              onPressed: () {
-                ClipboardManager.copyToClipBoard(qrResult);
-              },
-              style: NeumorphicStyle(
-                shape: NeumorphicShape.flat,
-                boxShape: NeumorphicBoxShape.circle(),
-              ),
-              padding: const EdgeInsets.all(12.0),
-              child: Icon(
-                Icons.content_copy,
-              ),
-            ),
-            NeumorphicButton(
-              provideHapticFeedback: false,
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              style: NeumorphicStyle(
-                shape: NeumorphicShape.flat,
-                boxShape: NeumorphicBoxShape.circle(),
-              ),
-              padding: const EdgeInsets.all(12.0),
-              child: Icon(
-                Icons.done,
-              ),
-            ),
-          ],
-          title: Text('QR Result (Hold to Select)'),
-          content: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: SelectableLinkify(
-                text: qrResult,
-                style: mainTextTheme(16),
-                onOpen: (link) async {
-                  if (await canLaunch(link.url)) {
-                    await launch(link.url);
-                  } else {
-                    throw 'Could not launch $link';
-                  }
-                },
-              ),
-            ),
-          ),
-        )).then((value) => qrViewController.resumeCamera());
+            builder: (context) => AlertDialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(16.0))),
+                  actions: <Widget>[
+                    NeumorphicButton(
+                      duration: Duration(milliseconds: 250),
+                      provideHapticFeedback: true,
+                      onPressed: () {
+                        ClipboardManager.copyToClipBoard(qrResult);
+                      },
+                      style: NeumorphicStyle(
+                        shape: NeumorphicShape.flat,
+                        boxShape: NeumorphicBoxShape.circle(),
+                      ),
+                      padding: const EdgeInsets.all(12.0),
+                      child: Icon(
+                        Icons.content_copy,
+                      ),
+                    ),
+                    NeumorphicButton(
+                      provideHapticFeedback: false,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: NeumorphicStyle(
+                        shape: NeumorphicShape.flat,
+                        boxShape: NeumorphicBoxShape.circle(),
+                      ),
+                      padding: const EdgeInsets.all(12.0),
+                      child: Icon(
+                        Icons.done,
+                      ),
+                    ),
+                  ],
+                  title: Text('QR Result (Hold to Select)'),
+                  content: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: SingleChildScrollView(
+                      child: SelectableLinkify(
+                        text: qrResult,
+                        style: mainTextTheme(16),
+                        onOpen: (link) async {
+                          if (await canLaunch(link.url)) {
+                            await launch(link.url);
+                          } else {
+                            throw 'Could not launch $link';
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+            context: context)
+        .then((value) => qrViewController.resumeCamera());
   }
 }
